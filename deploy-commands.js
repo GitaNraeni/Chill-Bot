@@ -45,7 +45,7 @@ const commands = [
     },
     {
         name: 'tebak-angka', // 🔥 Command baru ditambahkan di sini
-        description: 'Main tebak angka antara 1-10!',
+        description: 'Main tebak angka antara 1-100!',
     }
 ];
 
