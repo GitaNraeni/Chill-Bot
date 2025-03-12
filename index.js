@@ -6,29 +6,28 @@ import { handleCommands } from './commands.js';
 import handleAutoRole from './autorole.js';
 import checkAllMembers from './checkAllMembers.js';
 import { startGame, messageListener } from './tebakAngka.js';
+import addRoleCommand from './addrole.js'; // Import addrole
 
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers // Tambah biar bisa cek member
+        GatewayIntentBits.GuildMembers
     ]
 });
 
 client.once('ready', async () => {
     console.log(`✅ Bot ${client.user.tag} sudah online!`);
-    await handleAutoRole(client); // Jalankan auto-role
+    await handleAutoRole(client); 
 
-    // Set interval untuk update role setiap 24 jam
     setInterval(() => {
         checkAllMembers(client);
-    }, 24 * 60 * 60 * 1000); // 24 jam
+    }, 24 * 60 * 60 * 1000); 
 });
 
-// Event untuk auto-role saat member baru join
 client.on('guildMemberAdd', async (member) => {
-    const bayiRoleId = '1349282541546242090'; // Role Bayi (baru join)
+    const bayiRoleId = '1349282541546242090'; 
 
     try {
         await member.roles.add(bayiRoleId);
@@ -40,17 +39,21 @@ client.on('guildMemberAdd', async (member) => {
 
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
-    handleAutoRespond(message); // Auto respon
-    handleMediaChannel(message); // Cek media di channel khusus
-    messageListener(message); // Cek tebakan angka
+    handleAutoRespond(message);
+    handleMediaChannel(message);
+    messageListener(message);
 });
 
 client.on('interactionCreate', async (interaction) => {
-    handleCommands(interaction);
+    if (!interaction.isCommand()) return;
 
     if (interaction.commandName === 'tebak-angka') {
         await startGame(interaction);
+    } else if (interaction.commandName === 'addrole') {
+        await addRoleCommand.execute(interaction);
     }
+
+    handleCommands(interaction);
 });
 
 client.login(process.env.TOKEN);
