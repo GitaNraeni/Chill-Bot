@@ -44,19 +44,38 @@ const commands = [
         ]
     },
     {
-        name: 'tebak-angka', // 🔥 Command baru ditambahkan di sini
+        name: 'tebak-angka', 
         description: 'Main tebak angka antara 1-100!',
+    },
+    {
+        name: 'addrole',
+        description: 'Menambahkan role ke user',
+        options: [
+            {
+                name: 'user',
+                type: 6, // 6 = USER
+                description: 'User yang akan diberi role',
+                required: true,
+            },
+            {
+                name: 'role',
+                type: 8, // 8 = ROLE
+                description: 'Role yang akan diberikan',
+                required: true,
+            }
+        ]
     }
 ];
 
+// Kirim command ke Discord API
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
     try {
-        console.log('🔄 Mendaftarkan global slash commands...');
+        console.log('📡 Mengupdate slash commands...');
         await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
-        console.log('✅ Global slash commands berhasil didaftarkan!');
+        console.log('✅ Slash commands berhasil diupdate!');
     } catch (error) {
-        console.error(error);
+        console.error('❌ Gagal mengupdate slash commands:', error);
     }
 })();
